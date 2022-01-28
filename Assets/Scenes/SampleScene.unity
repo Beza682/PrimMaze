@@ -152,9 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92caa2f586955ca47a5afbb4adc61828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Z: 4
-  X: 101
-  Y: 101
+  WightX: 15
+  WightY: 15
   DeadEndRemovalCount: 5
   ExtensionRoad: 3
 --- !u!4 &411980727

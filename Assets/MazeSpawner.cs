@@ -12,9 +12,9 @@ public class MazeSpawner : MonoBehaviour
         MazeGenerator generator = new MazeGenerator();
         maze = generator.GenerateMaze();
 
-        for (int x = 0; x < generator.WightX; x++)
+        for (int x = 0; x < MazeGenerator.WightX; x++)
         {
-            for (int y = 0; y < generator.WightY; y++)
+            for (int y = 0; y < MazeGenerator.WightY; y++)
             {
 
                 var walls = Instantiate(WallPrefab, new Vector2(x, y), Quaternion.identity);

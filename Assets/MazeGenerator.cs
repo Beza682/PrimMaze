@@ -7,19 +7,22 @@ using System.Linq;
 
 public class MazeGenerator
 {
-    public int WightX = InputData.WightX;
-    public int WightY = InputData.WightY;
-    public int Iteration_dead_ends = InputData.Iteration_dead_ends;
-    public int Iteration_extension_road = InputData.Iteration_extension_road;
+    public static void Data(int X, int Y, int Iteration_dead_ends, int Iteration_extension_road)
+    {
+        WightX = X;
+        WightY = Y;
+        DeadEndRemovalCount = Iteration_dead_ends;
+        ExtensionRoad = Iteration_extension_road;
+    }
 
-
-    InputData Data = InputData.GetInstance(); //Ссылаюсь на скрипт с данными
+    public static int WightX;
+    public static int WightY;
+    public static int DeadEndRemovalCount;
+    public static int ExtensionRoad;
 
 
     public bool[,] GenerateMaze()
     {
-        Debug.Log(Data.ExpZ); //Проверяю, что переменная пришла
-
         bool[,] maze = new bool[WightX, WightY];
 
         for (int x = 0; x < WightX; x++)
@@ -29,14 +32,13 @@ public class MazeGenerator
                 maze[x, y] = true;
             }
         }
-
         RemoveWallsWithPrim(maze);
         RemoveDeadEnd(maze);
-        ExtensionRoad(maze);
+        AddExtensionRoad(maze);
         return maze;
     }
 
-    private void RemoveWallsWithPrim(bool[,] maze)
+    public void RemoveWallsWithPrim(bool[,] maze)
     {
         int x = UnityEngine.Random.Range(0, WightX / 2) * 2 + 1;
         int y = UnityEngine.Random.Range(0, WightY / 2) * 2 + 1;
@@ -136,9 +138,9 @@ public class MazeGenerator
             }
         }
     }
-    private void RemoveDeadEnd(bool[,] maze)
+    public void RemoveDeadEnd(bool[,] maze)
     {
-        for (int i = 0; i < Iteration_dead_ends; i++)
+        for (int i = 0; i < DeadEndRemovalCount; i++)
         {
             var dead_ends = new List<Point>();
 
@@ -180,9 +182,9 @@ public class MazeGenerator
             dead_ends.Clear();
         }
     }
-    private void ExtensionRoad(bool[,] maze)
+    public void AddExtensionRoad(bool[,] maze)
     {
-        for (int i = 0; i < Iteration_extension_road; i++)
+        for (int i = 0; i < ExtensionRoad; i++)
         {
 
             var new_cells = new List<Point>();
