@@ -7,11 +7,19 @@ using System.Linq;
 
 public class MazeGenerator
 {
-
     public int WightX = InputData.WightX;
     public int WightY = InputData.WightY;
+    public int Iteration_dead_ends = InputData.Iteration_dead_ends;
+    public int Iteration_extension_road = InputData.Iteration_extension_road;
+
+
+    InputData Data = InputData.GetInstance(); //Ссылаюсь на скрипт с данными
+
+
     public bool[,] GenerateMaze()
     {
+        Debug.Log(Data.ExpZ); //Проверяю, что переменная пришла
+
         bool[,] maze = new bool[WightX, WightY];
 
         for (int x = 0; x < WightX; x++)
@@ -24,7 +32,7 @@ public class MazeGenerator
 
         RemoveWallsWithPrim(maze);
         RemoveDeadEnd(maze);
-        //ExtensionRoad(maze);
+        ExtensionRoad(maze);
         return maze;
     }
 
@@ -48,7 +56,7 @@ public class MazeGenerator
             check.RemoveAt(index);
 
 
-            var road = new List<string>() { "top", "bot", "left", "right" };
+            var road = new List<Dict>() { Dict.Up, Dict.Down, Dict.Left, Dict.Right };
 
             while (road.Count() > 0)
             {
@@ -57,7 +65,7 @@ public class MazeGenerator
                 var direction = road[road_index];
                 switch (direction)
                 {
-                    case "top":
+                    case Dict.Down:
                         if (y - 2 >= 0 && (maze[x, y - 2] == false))
                         {
                             maze[x, y - 1] = false;
@@ -68,7 +76,7 @@ public class MazeGenerator
                             road.RemoveAt(road_index);
                         }
                         break;
-                    case "bot":
+                    case Dict.Up:
                         if ((y + 2 < WightY) && (maze[x, y + 2] == false))
                         {
                             maze[x, y + 1] = false;
@@ -79,7 +87,7 @@ public class MazeGenerator
                             road.RemoveAt(road_index);
                         }
                         break;
-                    case "left":
+                    case Dict.Left:
                         if (x - 2 >= 0 && (maze[x - 2, y] == false))
                         {
                             maze[x - 1, y] = false;
@@ -90,7 +98,7 @@ public class MazeGenerator
                             road.RemoveAt(road_index);
                         }
                         break;
-                    case "right":
+                    case Dict.Right:
                         if (x + 2 < WightX && (maze[x + 2, y] == false))
                         {
                             maze[x + 1, y] = false;
@@ -103,6 +111,7 @@ public class MazeGenerator
                         break;
                 }
             }
+
             var exist_top = check.Exists(c => c.X == x && c.Y == y + 2);
             var exist_bot = check.Exists(c => c.X == x && c.Y == y - 2);
             var exist_left = check.Exists(c => c.X == x - 2 && c.Y == y);
@@ -129,16 +138,13 @@ public class MazeGenerator
     }
     private void RemoveDeadEnd(bool[,] maze)
     {
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < Iteration_dead_ends; i++)
         {
-            int x;
-            int y;
-
             var dead_ends = new List<Point>();
 
-            for (x = 0; x < WightX; x++)
+            for (int x = 0; x < WightX; x++)
             {
-                for (y = 0; y < WightY; y++)
+                for (int y = 0; y < WightY; y++)
                 {
                     if (maze[x, y] == false)
                     {
@@ -156,7 +162,7 @@ public class MazeGenerator
                         {
                             neighbors++;
                         }
-                        if (x + 1 < WightX && (maze[x - 1, y] == false))
+                        if (x + 1 < WightX && (maze[x + 1, y] == false))
                         {
                             neighbors++;
                         }
@@ -167,64 +173,53 @@ public class MazeGenerator
                     }
                 }
             }
-            while (dead_ends.Count > 0)
+            foreach (var end in dead_ends)
             {
-                int dead_index = UnityEngine.Random.Range(0, dead_ends.Count);
-                var point = dead_ends[dead_index];
-                x = point.X;
-                y = point.Y;
-                maze[x, y] = true;
-                dead_ends.RemoveAt(dead_index);
+                maze[end.X, end.Y] = true;
             }
+            dead_ends.Clear();
         }
     }
-    //private void ExtensionRoad(bool[,] maze)
-    //{
-    //    for (int i = 0; i < 1; i++)
-    //    {
-    //        int x;
-    //        int y;
+    private void ExtensionRoad(bool[,] maze)
+    {
+        for (int i = 0; i < Iteration_extension_road; i++)
+        {
 
-    //        var new_cells = new List<Point>();
-    //        for (x = 0; x < WightX; x++)
-    //        {
-    //            for (y = 0; y < WightY; y++)
-    //            {
-    //                if (maze[x, y] == true)
-    //                {
-    //                    int neighbors = 0;
-    //                    for (int a = 0; a < 3; a++)
-    //                    {
-    //                        for (int b = 0; b < 3; b++)
-    //                        {
-    //                            int neighbor_x = x - a;
-    //                            int neighbor_y = x - b;
-    //                            if (neighbor_x >= 0 && neighbor_x < WightX && neighbor_y >= 0 && neighbor_y < WightY)
-    //                            {
-    //                                if (maze[neighbor_x, neighbor_y] == false)
-    //                                {
-    //                                    neighbors++;
-    //                                }
-    //                            }
-    //                        }
-    //                    }
-    //                    if (neighbors >= 4)
-    //                    {
-    //                        new_cells.Add(new Point(x, y));
-    //                    }
-    //                }
-    //            }
-    //        }
-
-    //        while (new_cells.Count > 0)
-    //        {
-    //            int new_index = UnityEngine.Random.Range(0, new_cells.Count);
-    //            var point = new_cells[new_index];
-    //            x = point.X;
-    //            y = point.Y;
-    //            maze[x, y] = false;
-    //            new_cells.RemoveAt(new_index);
-    //        }
-    //    }
-    //}
+            var new_cells = new List<Point>();
+            for (int x = 0; x < WightX; x++)
+            {
+                for (int y = 0; y < WightY; y++)
+                {
+                    if (maze[x, y] == true)
+                    {
+                        int neighbors = 0;
+                        for (int a = -1; a <= 1; a++)
+                        {
+                            for (int b = -1; b <= 1; b++)
+                            {
+                                int neighbor_x = x + a;
+                                int neighbor_y = y + b;
+                                if ((neighbor_x >= 0) && (neighbor_x < WightX) && (neighbor_y >= 0) && (neighbor_y < WightY))
+                                {
+                                    if (maze[neighbor_x, neighbor_y] == false)
+                                    {
+                                        neighbors++;
+                                    }
+                                }
+                            }
+                        }
+                        if (neighbors >= 4)
+                        {
+                            new_cells.Add(new Point(x, y));
+                        }
+                    }
+                }
+            }
+            foreach (var space in new_cells)
+            {
+                maze[space.X, space.Y] = false;
+            }
+            new_cells.Clear();
+        }
+    }
 }
