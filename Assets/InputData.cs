@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InputData : MonoBehaviour
@@ -8,9 +6,4 @@ public class InputData : MonoBehaviour
     public int WightY;
     public int DeadEndRemovalCount;
     public int ExtensionRoad;
-
-    public void Start()
-    {
-        MazeGenerator.Data(WightX, WightY, DeadEndRemovalCount, ExtensionRoad);
-    }
 }

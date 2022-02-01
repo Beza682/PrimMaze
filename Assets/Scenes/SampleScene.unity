@@ -152,10 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92caa2f586955ca47a5afbb4adc61828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WightX: 15
-  WightY: 15
-  DeadEndRemovalCount: 5
-  ExtensionRoad: 3
+  WightX: 0
+  WightY: 0
+  DeadEndRemovalCount: 0
+  ExtensionRoad: 0
 --- !u!4 &411980727
 Transform:
   m_ObjectHideFlags: 0
@@ -285,6 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WallPrefab: {fileID: 5532653047105820996, guid: 2ad2f7e80ac22fb4d8d433d218104856, type: 3}
+  Data: {fileID: 411980726}
 --- !u!4 &1916166241
 Transform:
   m_ObjectHideFlags: 0
