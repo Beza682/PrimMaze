@@ -28,11 +28,9 @@ public class MazeGenerator
     {
         int x = Random.Range(0, WightX / 2) *2 + 1;
         int y = Random.Range(0, WightY / 2) * 2 + 1;
-        Debug.Log(x);
-        Debug.Log(y);
-
 
         var direction = new List<Dict> { Dict.Up, Dict.Down, Dict.Left, Dict.Right };
+        List<Dict> road = new List<Dict>();
         var check = new List<Point>();
 
         check.Add(new Point(x, y));
@@ -46,10 +44,7 @@ public class MazeGenerator
             maze[x, y] = false;
             check.RemoveAt(index);
 
-            var road = direction;
-
-            road.AddRange(new List<Dict> { Dict.Up, Dict.Down, Dict.Left, Dict.Right });
-
+            road.AddRange(direction);
 
             while (road.Count() > 0)
             {
