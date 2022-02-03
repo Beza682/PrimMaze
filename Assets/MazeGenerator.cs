@@ -30,26 +30,25 @@ public class MazeGenerator
         int y = Random.Range(0, WightY / 2) * 2 + 1;
 
         var direction = new List<Dict> { Dict.Up, Dict.Down, Dict.Left, Dict.Right };
-        List<Dict> road = new List<Dict>();
+        var road = new List<Dict>();
         var check = new List<Point>();
 
         check.Add(new Point(x, y));
 
         while (check.Count > 0)
         {
-            int index = Random.Range(0, check.Count);
-            var point = check[index];
+            var point = check.GetRandom();
             x = point.X;
             y = point.Y;
             maze[x, y] = false;
-            check.RemoveAt(index);
+            check.Remove(point);
 
             road.AddRange(direction);
 
             while (road.Count() > 0)
             {
-                int road_index = Random.Range(0, road.Count);
-                switch (road[road_index])
+                var way = road.GetRandom();
+                switch (way)
                 {
                     case Dict.Down:
                         if (y - 2 > 0 && !maze[x, y - 2])
@@ -59,7 +58,7 @@ public class MazeGenerator
                         }
                         else
                         {
-                            road.RemoveAt(road_index);
+                            road.Remove(way);
                         }
                         break;
                     case Dict.Up:
@@ -70,7 +69,7 @@ public class MazeGenerator
                         }
                         else
                         {
-                            road.RemoveAt(road_index);
+                            road.Remove(way);
                         }
                         break;
                     case Dict.Left:
@@ -81,7 +80,7 @@ public class MazeGenerator
                         }
                         else
                         {
-                            road.RemoveAt(road_index);
+                            road.Remove(way);
                         }
                         break;
                     case Dict.Right:
@@ -92,7 +91,7 @@ public class MazeGenerator
                         }
                         else
                         {
-                            road.RemoveAt(road_index);
+                            road.Remove(way);
                         }
                         break;
                 }
@@ -124,10 +123,10 @@ public class MazeGenerator
     }
     private static void RemoveDeadEnd(bool[,] maze, int WightX, int WightY, int DeadEndRemovalCount)
     {
+        var dead_ends = new List<Point>();
+
         for (int i = 0; i < DeadEndRemovalCount; i++)
         {
-            var dead_ends = new List<Point>();
-
             for (int x = 0; x < WightX; x++)
             {
                 for (int y = 0; y < WightY; y++)
@@ -171,10 +170,10 @@ public class MazeGenerator
     }
     private static void AddExtensionRoad(bool[,] maze, int WightX, int WightY, int ExtensionRoad)
     {
+        var new_cells = new List<Point>();
+
         for (int i = 0; i < ExtensionRoad; i++)
         {
-            var new_cells = new List<Point>();
-
             for (int x = 0; x < WightX; x++)
             {
                 for (int y = 0; y < WightY; y++)
